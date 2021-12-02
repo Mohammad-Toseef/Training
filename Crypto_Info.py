@@ -11,7 +11,7 @@ headers = {
 response = requests.get(
     "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1h%2C24h", headers=headers)
 #Creating a CSV file using open() method in F: Drive
-file = open('F:/output.csv','w',newline = '')
+file = open('C:/output.csv','w',newline = '')
 csv_writer = csv.writer(file)
 line = 0
 #reading data and storing it in csv file
