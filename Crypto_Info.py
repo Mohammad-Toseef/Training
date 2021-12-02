@@ -19,4 +19,5 @@ for item in response.json():
         #writing values corresponding to columns
         csv_writer.writerow(item.values())
     line+=1
+#closing the file 
 file.close()
