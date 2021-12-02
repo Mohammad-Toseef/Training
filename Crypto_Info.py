@@ -21,5 +21,6 @@ for item in response.json():
     else:
         csv_writer.writerow(item.values())
     line+=1
+#printing to console
 [print(x) for x in response.json()]
 file.close()
