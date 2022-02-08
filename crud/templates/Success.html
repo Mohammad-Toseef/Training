@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1> {{msg}} </h1>
+<a href="/add" type="button" class="btn btn-success">Add Data</a>
+<a href="/backup" type="button" class="btn btn-success">Backup to S3 bucket</a>
+<a href="/restore" type="button" class="btn btn-success">Restore from S3 bucket</a>
+<table class="table">
+  <thead>
+    <tr>
+      <th colspan="2" class="table-active">Action</th>
+      {% for heading in data[0] %}
+      <th colspan="2" class="table-active">{{heading}}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for list in data[1:] %}
+  {% for row in list %}
+  <tr>
+    <td colspan="2" class="table-active">
+      <!-- Button trigger modal -->
+<!--
+      <a type="button" class="btn btn-primary" row_data-bs-toggle="modal" row_data-bs-target="#modaledit{{row[0]}}">
+  Edit
+</a> -->
+      <a href="/update/{{row[0]}}" class="btn btn-warning btn-xs" >Edit</a>
+      <a href="/delete/{{row[0]}}" class="btn btn-danger btn-xs" >Delete</a>
+    </td>
+      {% for cell in row %}
+      <td colspan="2" class="table-active">{{cell}}</td>
+      {% endfor %}
+    </tr>
+
+
+  {% endfor %}
+  {% endfor %}
+  </tbody>
+
+</table>
+
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+{% set record_id = data[0][0] %}
+<h1> Editing {{record_id}} Record </h1>
+<form method="post" action="/update/{{record_id}}">
+
+  {% for i in range(headers|length) %}
+    <div class="mb-3">
+    <label  class="form-label">{{headers[i]}}</label>
+  {% if i==0 or i==1 %}
+  <input type="text" class="form-control" value="{{data[0][i]}}" name="{{headers[i]}}" required>
+  {% else %}
+      <input type="text" class="form-control" value="{{data[0][i]}}" name="{{headers[i]}}">
+      {% endif %}
+    </div>
+  {% endfor %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+  {% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <div class="well text-center">
+<h1>Click on the "Choose File" button to upload a file:</h1>
+
+<form method = "post" action="\upload_file" enctype="multipart/form-data">
+  <input type="file" id="myFile" name="filename">
+  <input type="submit">
+</form>
+  </div>
+</div>
+{% endblock %}
