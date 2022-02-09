@@ -18,7 +18,7 @@ class Connection:
     implements Create read update and delete functions
     """
     my_db = None
-    table_name = 'Crypto2_csv'
+    table_name = ''
     file_name = ''
     table_columns = []
     data_type_list = []
@@ -238,7 +238,7 @@ class Connection:
                 insert_query = (insert_query + f"'{value}',")
             else:
                 insert_query = (insert_query + f"{value},")
-        insert_query = insert_query[:-1] + ')'
+        insert_query = insert_query[:-1] + ');'
         return insert_query
         # cursor.execute(insert_query)
         # Connection.my_db.commit()

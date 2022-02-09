@@ -23,7 +23,7 @@ api_insert_endpoint = 'https://usq56k2ezd.execute-api.ap-south-1.amazonaws.com/t
 api_read_endpoint = 'https://usq56k2ezd.execute-api.ap-south-1.amazonaws.com/test/read'
 api_delete_endpoint = 'https://usq56k2ezd.execute-api.ap-south-1.amazonaws.com/test/delete'
 api_backup_endpoint = 'https://usq56k2ezd.execute-api.ap-south-1.amazonaws.com/test/backup'
-query = f"SELECT * FROM {Connection.database}.{Connection.table_name}"
+query = ''
 
 @app.route("/")
 def index():
@@ -40,10 +40,12 @@ def upload_file():
     Uploads file to the database
     :return: Success page
     """
+    global query
     file = request.files['filename']
     app.FILE_NAME = connection.file_name = file.filename
     file.save(os.path.join(os.path.dirname(__file__), file.filename))
     app.TABLE_NAME = "_".join(file.filename.split('.'))
+    Connection.table_name = app.TABLE_NAME
 #    connection.upload_file(file.filename)
     with open(os.path.join(os.path.dirname(__file__), file.filename), 'r',
               encoding="utf-8") as file_obj:
@@ -56,8 +58,9 @@ def upload_file():
         # stores insert statement
         insert_statement = Connection.insert_statement(reader)
         requests.post(url=f'{api_insert_endpoint}?operation=insert&table={app.TABLE_NAME}', data=insert_statement)
+    query = f"SELECT * FROM {Connection.database}.{Connection.table_name}"
     data = requests.get(url=f'{api_read_endpoint}?operation=read&table={app.TABLE_NAME}&query={query}')
-
+    print(data.text)
     return render_template("Success.html", data=json.loads(data.text), msg='File uploaded Successfully')
 
 
@@ -97,11 +100,12 @@ def update(record_id):
         statement = ''
         for key, value in request.form.to_dict().items():
             statement += str(key) + ' = \'' + str(value) + '\' ,'
-        update_query = update_query + statement[:-1] + f" WHERE id = '{str(record_id)}'"
+        update_query = update_query + statement[:-1] + f" WHERE {Connection.table_columns[0]} = '{str(record_id)}';"
+        print(update_query)
         requests.post(url=f'{api_insert_endpoint}?operation=insert&table={app.TABLE_NAME}', data=update_query)
         data = requests.get(url=f'{api_read_endpoint}?operation=read&table={app.TABLE_NAME}&query={query}')
         return render_template("Success.html", data=json.loads(data.text), msg='Record Updated Successfully')
-    conditional_query = f"{query} WHERE id='{record_id}'"
+    conditional_query = f"{query} WHERE {Connection.table_columns[0]}='{record_id}'"
     # data = connection.select_statement(record_id)
     data = requests.get(url=f'{api_read_endpoint}?operation=read&table={app.TABLE_NAME}&query={conditional_query}')
     return render_template("edit.html", data=json.loads(data.text)[1], headers=Connection.table_columns)
